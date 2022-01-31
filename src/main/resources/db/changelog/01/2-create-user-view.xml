@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="2" author="aslamov">
+        <comment>Создание представления пользователя (идентификатор, имя,
+            все наименования ролей пользователя строкой через запятую</comment>
+
+            <createView viewName="v_user_view">
+                SELECT users.id, users.name, STRING_AGG(roles.title, ', ') as roles
+                FROM users
+                INNER JOIN users_roles ON users.id = users_roles.user_id
+                INNER JOIN roles ON roles.id = users_roles.role_id
+                GROUP BY users.id, users.name
+                ORDER BY users.id;
+            </createView>
+    </changeSet>
+</databaseChangeLog>
